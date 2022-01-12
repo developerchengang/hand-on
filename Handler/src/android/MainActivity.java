@@ -37,12 +37,21 @@ public class MainActivity extends Activity {
         System.out.println("MainActivity------>onResume()");
         new Thread(() -> {
 
-            for (int i = 0; i < 100; i++) {
-                Message message = new Message();
-                message.obj = String.valueOf(i);
+            Message message = new Message();
+            message.obj = "1";
+            mHandler.sendMessageDelayed(Message.obtain(message), 500);
 
-                mHandler.sendMessage(Message.obtain(message));
-            }
+            message = new Message();
+            message.obj = "2";
+            mHandler.sendMessageDelayed(Message.obtain(message), 100);
+
+            message = new Message();
+            message.obj = "3";
+            mHandler.sendMessageDelayed(Message.obtain(message), 10);
+
+            message = new Message();
+            message.obj = "4";
+            mHandler.sendMessageDelayed(Message.obtain(message), 5);
 
         }).start();
     }

@@ -16,13 +16,31 @@ public class Handler {
     }
 
     public final void sendMessage(Message msg) {
-        enqueueMessage(mQueue, msg);
+        sendMessageDelayed(msg, 0);
     }
 
-    private void enqueueMessage(MessageQueue queue, Message msg) {
+    public final boolean sendMessageDelayed(Message msg, long delayMillis) {
+        if (delayMillis < 0) {
+            delayMillis = 0;
+        }
+        return sendMessageAtTime(msg, System.currentTimeMillis() + delayMillis);
+    }
+
+    public boolean sendMessageAtTime(Message msg, long uptimeMillis) {
+        MessageQueue queue = mQueue;
+        if (queue == null) {
+            RuntimeException e = new RuntimeException(
+                    this + " sendMessageAtTime() called with no mQueue");
+            System.out.println("Looper---->" + e.getMessage());
+            return false;
+        }
+        return enqueueMessage(queue, msg, uptimeMillis);
+    }
+
+    private boolean enqueueMessage(MessageQueue queue, Message msg, long uptimeMillis) {
         msg.target = this;
 
-        queue.enqueueMessage(msg);
+        return queue.enqueueMessage(msg, uptimeMillis);
     }
 
     public void dispatchMessage(Message msg) {
